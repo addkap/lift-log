@@ -186,3 +186,6 @@ h1::after { content: ''; position: absolute; left: 0; bottom: 0; width: 64px; he
 /* Tab bar: blue with a red top edge; active tab is red with a white marker */
 .tabbar { box-shadow: 0 -3px 10px rgba(0, 20, 70, 0.25); }
 .tab.active { box-shadow: inset 0 4px 0 #fff; }
+
+/* Offline notice under the header */
+.offline { margin: 0; padding: 10px 16px; background: #fff3c4; color: #3a2a00; font-weight: 700; text-align: center; border-bottom: 2px solid #b38600; }

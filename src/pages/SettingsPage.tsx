@@ -28,7 +28,17 @@ function SettingNumber(props: { label: string; value: number; decimal?: boolean;
   );
 }
 
+/** Is the browser promising to keep our saved data? (iPhone only does this for Home Screen apps.) */
+function useStorageProtected(): boolean | null {
+  const [state, setState] = useState<boolean | null>(null);
+  useEffect(() => {
+    navigator.storage?.persisted?.().then(setState).catch(() => setState(null));
+  }, []);
+  return state;
+}
+
 export default function SettingsPage() {
+  const protectedStorage = useStorageProtected();
   const exercises = useLiveQuery(() => db.exercises.toArray(), [], []);
   const templates = useLiveQuery(() => db.templates.toArray(), [], []);
   const nameOf = (id: string) => exercises.find((e) => e.id === id)?.name ?? id;
@@ -67,6 +77,15 @@ export default function SettingsPage() {
           </section>
         );
       })}
+
+      <section className="card">
+        <h2>Phone storage</h2>
+        {protectedStorage ? (
+          <p>Protected: the phone will keep your workouts safe.</p>
+        ) : (
+          <p>Not protected yet. Add Lift Log to the Home Screen so the phone keeps your workouts safe.</p>
+        )}
+      </section>
 
       <section className="card">
         <h2>Backup and OneDrive</h2>
