@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { db } from '../db';
-import { formatShortDate, todayLocal } from '../lib/dates';
+import { formatShortDate, formatWeekday, todayLocal } from '../lib/dates';
 import { formatWeight } from '../lib/progression';
 import { RANGES, exerciseSessions, exerciseStats, loggedExercises, rangeStart, summarize, type Range } from '../lib/stats';
 import { WORKOUT_LABELS, type WorkoutType } from '../types';
@@ -19,7 +19,11 @@ export default function SummaryPage() {
   const today = todayLocal();
 
   const summary = summarize(workouts, range, today);
-  const weekData = summary.weeks.map((w) => ({ label: formatShortDate(w.week), count: w.count }));
+  // 1 week shows a bar per day (Mon-Sun); longer ranges show a bar per week.
+  const oneWeek = range === '1w';
+  const weekData = oneWeek
+    ? summary.days.map((d) => ({ label: formatWeekday(d.date), count: d.count }))
+    : summary.weeks.map((w) => ({ label: formatShortDate(w.week), count: w.count }));
 
   const exercises = loggedExercises(workouts);
   const exerciseId = exercises.some((e) => e.id === pick) ? pick : exercises[0]?.id;
@@ -47,13 +51,13 @@ export default function SummaryPage() {
       </div>
 
       <section className="card">
-        <h2>Workouts per week</h2>
-        <p className="muted">Each bar is one week, Monday to Sunday.</p>
-        <div className="chart" role="img" aria-label="Bar chart of workouts per week">
+        <h2>{oneWeek ? 'Workouts this week' : 'Workouts per week'}</h2>
+        <p className="muted">{oneWeek ? 'Each bar is one day, Monday to Sunday.' : 'Each bar is one week, Monday to Sunday.'}</p>
+        <div className="chart" role="img" aria-label={oneWeek ? 'Bar chart of workouts per day this week' : 'Bar chart of workouts per week'}>
           <ResponsiveContainer>
             <BarChart data={weekData} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="label" tick={TICK} interval="preserveStartEnd" minTickGap={24} />
+              <XAxis dataKey="label" tick={TICK} interval={oneWeek ? 0 : "preserveStartEnd"} minTickGap={24} />
               <YAxis allowDecimals={false} tick={TICK} width={40} />
               <Tooltip />
               <Bar dataKey="count" name="Workouts" fill={BLUE} radius={[4, 4, 0, 0]} />

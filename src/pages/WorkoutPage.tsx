@@ -68,7 +68,7 @@ function StartScreen({ saved, onStart }: { saved: boolean; onStart: (t: WorkoutT
   return (
     <>
       <h1>Start a workout</h1>
-      {saved && <p className="banner ok" role="status">Workout saved. Great job, Go Bills!</p>}
+      {saved && <p className="banner ok" role="status">Workout saved. Great job!</p>}
 
       <p className="label">Which workout?</p>
       <div className="choices">

@@ -129,7 +129,7 @@ p { margin: 4px 0; }
 .list-item strong { display: block; font-size: 20px; }
 
 /* ---- Summary ---- */
-.range { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 8px 0 12px; }
+.range { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 8px 0 12px; }
 .range button {
   min-height: 52px; font: inherit; font-size: 18px; font-weight: 700; padding: 4px;
   background: #fff; color: var(--text); border: 2px solid var(--border); border-radius: 10px; cursor: pointer;
@@ -143,3 +143,86 @@ p { margin: 4px 0; }
 .select { display: block; width: 100%; min-height: 56px; padding: 8px 12px; font: inherit; font-size: 20px; font-weight: 700;
   color: var(--text); background: #fff; border: 2px solid var(--border); border-radius: 12px; }
 .type-line { display: flex; justify-content: space-between; padding: 4px 0; font-weight: 700; }
+
+/* =====================================================================
+   EXTRA-LOUD THEME: gradients, racing stripes, jersey-style type, hard shadows.
+   (These rules come last so they override the plainer ones above.)
+   ===================================================================== */
+:root {
+  --blue-grad: linear-gradient(180deg, #0046b8 0%, #00338d 55%, #0c2340 100%);
+  --red-grad: linear-gradient(180deg, #e0143c 0%, #c60c30 55%, #96091f 100%);
+  --jersey: Impact, 'Arial Black', 'Helvetica Neue', sans-serif;
+  --shadow: 4px 4px 0 var(--navy);
+}
+
+body { background: #fff linear-gradient(180deg, #dfe7f7 0, #fff 260px) no-repeat; }
+
+/* Header: deep-blue gradient, triple racing stripe (red / white / red), jersey lettering */
+.banner-top {
+  position: relative;
+  background: var(--blue-grad);
+  border-bottom: 0;
+  padding-bottom: 20px;
+  box-shadow: 0 4px 0 var(--navy);
+}
+.banner-top::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 12px;
+  background: linear-gradient(180deg, var(--accent) 0 4px, #fff 4px 8px, var(--accent) 8px 12px);
+}
+.banner-top .brand {
+  font-family: var(--jersey); font-size: 34px; font-style: italic; font-weight: 900; letter-spacing: 2px;
+  text-shadow: 3px 3px 0 var(--accent);
+}
+.banner-top .cheer { font-family: var(--jersey); font-style: italic; font-size: 18px; letter-spacing: 1px; color: #fff; text-shadow: 2px 2px 0 var(--navy); }
+
+/* Page titles: big italic jersey type with a red/blue stripe underneath */
+h1 {
+  font-family: var(--jersey); font-style: italic; font-size: 36px; letter-spacing: 1px;
+  text-shadow: 2px 2px 0 #c9d4ee; padding-bottom: 10px; margin-bottom: 14px;
+  background: linear-gradient(90deg, var(--accent) 0 40%, #fff 40% 44%, var(--primary) 44% 100%) bottom / 100% 6px no-repeat;
+}
+h2 { font-family: var(--jersey); font-style: italic; letter-spacing: 0.5px; font-size: 24px; }
+
+/* Cards: white, thick blue border, red left bar, hard navy shadow */
+.card {
+  background: #fff; border: 3px solid var(--primary); border-left: 12px solid var(--accent);
+  box-shadow: var(--shadow); border-radius: 12px;
+}
+.card .card { box-shadow: none; }
+
+/* Buttons: gradients with a hard shadow, they press down when tapped */
+.btn { border-width: 3px; box-shadow: 3px 3px 0 var(--navy); transition: transform 0.05s, box-shadow 0.05s; }
+.btn:active:not(:disabled) { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--navy); }
+.btn.primary { background: var(--blue-grad); border-color: var(--navy); color: #fff; }
+.btn.big { background: var(--red-grad); border-color: var(--navy); color: #fff; font-family: var(--jersey); font-style: italic; font-size: 26px; letter-spacing: 1.5px; text-transform: uppercase; box-shadow: 4px 4px 0 var(--navy); }
+.btn.big:disabled { background: #7d8498; border-color: #4a5166; box-shadow: none; }
+.btn.danger { box-shadow: 3px 3px 0 #6a0000; }
+
+.choice { border-width: 3px; box-shadow: var(--shadow); font-family: var(--jersey); font-style: italic; letter-spacing: 1px; text-transform: uppercase; }
+.choice.selected { background: var(--blue-grad); border-color: var(--navy); border-left: 14px solid var(--accent); }
+
+.date, .text, .num.wide, .select { border-width: 3px; border-color: var(--primary); }
+.num { border-width: 3px; border-color: var(--primary); font-family: var(--jersey); }
+
+/* Summary tiles and range toggle */
+.tile { background: #fff; border: 3px solid var(--primary); border-top: 8px solid var(--accent); box-shadow: 3px 3px 0 var(--navy); }
+.tile .big-number { font-family: var(--jersey); font-style: italic; font-size: 38px; }
+.range button { border-width: 3px; box-shadow: 2px 2px 0 var(--navy); }
+.range button.selected { background: var(--blue-grad); border-color: var(--navy); border-bottom: 6px solid var(--accent); }
+
+/* History list */
+.list-item { background: #fff; border: 3px solid var(--primary); border-left: 14px solid var(--accent); box-shadow: var(--shadow); }
+.list-item strong { font-family: var(--jersey); font-style: italic; letter-spacing: 0.5px; color: var(--primary); }
+
+/* Banners */
+.banner.ok { background: #fff; border-width: 3px; border-left-width: 12px; box-shadow: 3px 3px 0 var(--ok); }
+.banner.err { border-width: 3px; border-left-width: 12px; }
+
+/* Tab bar: gradient with a red / white stripe on top and a red active tab */
+.tabbar { background: var(--blue-grad); border-top: 0; box-shadow: 0 -4px 0 var(--navy); }
+.tabbar::before {
+  content: ''; position: absolute; left: 0; right: 0; top: -12px; height: 8px;
+  background: linear-gradient(180deg, var(--accent) 0 4px, #fff 4px 8px);
+}
+.tab { background: transparent; font-family: var(--jersey); font-style: italic; letter-spacing: 0.5px; text-transform: uppercase; font-size: 17px; }
+.tab.active { background: var(--red-grad); box-shadow: inset 0 4px 0 #fff; }

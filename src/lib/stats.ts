@@ -2,8 +2,9 @@
 import type { Workout, WorkoutType } from '../types';
 import { addDays, weekStart } from './dates';
 
-export type Range = '4w' | '3m' | '1y' | 'all';
+export type Range = '1w' | '4w' | '3m' | '1y' | 'all';
 export const RANGES: { id: Range; label: string }[] = [
+  { id: '1w', label: '1 week' },
   { id: '4w', label: '4 weeks' },
   { id: '3m', label: '3 months' },
   { id: '1y', label: '1 year' },
@@ -17,6 +18,7 @@ export const liveWorkouts = (ws: Workout[]) => ws.filter((w) => !w.deletedAt);
 export function rangeStart(range: Range, today: string, workouts: Workout[]): string {
   const thisWeek = weekStart(today);
   switch (range) {
+    case '1w': return thisWeek; // this week only, Monday to Sunday
     case '4w': return addDays(thisWeek, -3 * 7);
     case '3m': return addDays(thisWeek, -12 * 7);
     case '1y': return addDays(thisWeek, -51 * 7);
@@ -32,6 +34,7 @@ export interface WeekCount { week: string; count: number } // week = its Monday
 export interface Summary {
   total: number;
   weeks: WeekCount[];
+  days: { date: string; count: number }[]; // Mon-Sun, only filled for the 1 week range
   avgPerWeek: number;
   weeksWith2Plus: number;
   byType: Record<WorkoutType, number>;
@@ -53,9 +56,18 @@ export function summarize(all: Workout[], range: Range, today: string): Summary 
   const byType: Record<WorkoutType, number> = { lower: 0, upper: 0, full: 0 };
   for (const w of inRange) byType[w.type]++;
 
+  // The 1 week view shows one bar per day instead of one bar total.
+  const days = range === '1w'
+    ? Array.from({ length: 7 }, (_, i) => {
+        const date = addDays(start, i);
+        return { date, count: inRange.filter((w) => w.date === date).length };
+      })
+    : [];
+
   return {
     total: inRange.length,
     weeks,
+    days,
     avgPerWeek: inRange.length / weeks.length,
     weeksWith2Plus: weeks.filter((w) => w.count >= 2).length,
     byType,

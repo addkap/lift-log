@@ -24,7 +24,7 @@ export default function App() {
       {/* All pages stay mounted-on-demand; the Workout page reloads its draft from storage itself. */}
       <header className="banner-top">
         <span className="brand">Lift Log</span>
-        <span className="cheer">Go Bills!</span>
+        <span className="cheer">Stronger every week</span>
       </header>
       <main className="page">
         {tab === 'Workout' && <WorkoutPage />}

@@ -47,3 +47,9 @@ export function weekStart(ymd: string): string {
   const dow = new Date(y, m - 1, d).getDay(); // 0 = Sunday
   return addDays(ymd, -((dow + 6) % 7));
 }
+
+/** "Mon" */
+export function formatWeekday(ymd: string): string {
+  const [y, m, d] = parts(ymd);
+  return DAYS[new Date(y, m - 1, d).getDay()];
+}

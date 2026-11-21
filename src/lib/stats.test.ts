@@ -35,6 +35,14 @@ describe('summary', () => {
     expect(s.total).toBe(4);
     expect(s.weeks[0].week).toBe('2026-09-28');
   });
+  it('1 week: this week only, with one entry per day Monday to Sunday', () => {
+    const s = summarize(ws, '1w', TODAY);
+    expect(s.total).toBe(2);
+    expect(s.weeks).toHaveLength(1);
+    expect(s.days.map((d) => d.count)).toEqual([1, 0, 0, 0, 0, 1, 0]);
+    expect(s.days[0].date).toBe('2026-11-16');
+    expect(s.days[6].date).toBe('2026-11-22');
+  });
   it('ignores deleted workouts and handles no data', () => {
     expect(summarize([w('2026-11-16', 'lower', undefined, { deletedAt: 1 })], '4w', TODAY).total).toBe(0);
     expect(summarize([], 'all', TODAY).weeks).toHaveLength(1);
