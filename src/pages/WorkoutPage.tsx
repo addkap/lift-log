@@ -7,8 +7,10 @@ import { formatLongDate, todayLocal } from '../lib/dates';
 import { hintFor } from '../lib/progression';
 import { WORKOUT_LABELS, type Draft, type Workout, type WorkoutType } from '../types';
 import ExerciseCard from '../components/ExerciseCard';
+import { isConfigured } from '../sync/auth';
+import { useSyncStatus } from '../sync/useSyncStatus';
 
-export default function WorkoutPage() {
+export default function WorkoutPage({ onGoSettings }: { onGoSettings: () => void }) {
   // undefined = still loading, null = no workout in progress
   const [draft, setDraft] = useState<Draft | null | undefined>(undefined);
   const draftRef = useRef<Draft | null>(null);
@@ -43,7 +45,7 @@ export default function WorkoutPage() {
   if (draft === undefined) return <p>Loading…</p>;
 
   if (draft === null) {
-    return <StartScreen saved={saved} onStart={async (type, date) => { setSaved(false); replace(await startWorkout(type, date)); }} />;
+    return <StartScreen saved={saved} onGoSettings={onGoSettings} onStart={async (type, date) => { setSaved(false); replace(await startWorkout(type, date)); }} />;
   }
 
   return (
@@ -61,13 +63,21 @@ export default function WorkoutPage() {
 
 // ---------------------------------------------------------------- start screen
 
-function StartScreen({ saved, onStart }: { saved: boolean; onStart: (t: WorkoutType, date: string) => void }) {
+function StartScreen({ saved, onStart, onGoSettings }: { saved: boolean; onStart: (t: WorkoutType, date: string) => void; onGoSettings: () => void }) {
+  const sync = useSyncStatus();
   const [type, setType] = useState<WorkoutType | null>(null);
   const [date, setDate] = useState(todayLocal());
 
   return (
     <>
       <h1>Start a workout</h1>
+      {isConfigured() && !sync.configured && (
+        <section className="card">
+          <h2>Back up to OneDrive</h2>
+          <p>Your workouts are safe on this phone. Set up OneDrive to keep a copy too.</p>
+          <button className="btn" onClick={onGoSettings}>Set up OneDrive</button>
+        </section>
+      )}
       {saved && <p className="banner ok" role="status">Workout saved. Great job, Go Bills!</p>}
 
       <p className="label">Which workout?</p>

@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { ensureSeeded } from './store';
+import SyncChip from './components/SyncChip';
+import { RETURN_TAB_KEY } from './sync/auth';
+import { initialPullIfEmpty, startAutoSync } from './sync/engine';
 import WorkoutPage from './pages/WorkoutPage';
 import SettingsPage from './pages/SettingsPage';
 import HistoryPage from './pages/HistoryPage';
@@ -22,13 +25,27 @@ const TABS = ['Workout', 'History', 'Summary', 'Settings'] as const;
 type Tab = (typeof TABS)[number];
 
 export default function App() {
-  const [tab, setTab] = useState<Tab>('Workout');
+  // After coming back from the Microsoft sign-in page, reopen the tab we left.
+  const [tab, setTab] = useState<Tab>(() => {
+    try {
+      const saved = localStorage.getItem(RETURN_TAB_KEY);
+      localStorage.removeItem(RETURN_TAB_KEY);
+      if (saved && (TABS as readonly string[]).includes(saved)) return saved as Tab;
+    } catch { /* ignore */ }
+    return 'Workout';
+  });
   const [ready, setReady] = useState(false);
   const online = useOnline();
 
   // Load the preloaded workouts the first time the app runs.
   useEffect(() => {
-    ensureSeeded().then(() => setReady(true));
+    (async () => {
+      await ensureSeeded();
+      // A phone with no workouts but a connected OneDrive folder pulls its data first (gives up after a few seconds).
+      await Promise.race([initialPullIfEmpty().catch(() => {}), new Promise((r) => setTimeout(r, 7000))]);
+      setReady(true);
+      startAutoSync(); // background sync; logging never waits for it
+    })();
   }, []);
 
   if (!ready) return <main className="page"><p>Loading…</p></main>;
@@ -41,9 +58,10 @@ export default function App() {
         <span className="cheer">Go Bills!</span>
       </header>
       {/* Reassure him: everything still saves on the phone with no signal. */}
+      <SyncChip />
       {!online && <p className="offline" role="status">Offline: your workouts are still saved on this phone.</p>}
       <main className="page">
-        {tab === 'Workout' && <WorkoutPage />}
+        {tab === 'Workout' && <WorkoutPage onGoSettings={() => setTab('Settings')} />}
         {tab === 'History' && <HistoryPage />}
         {tab === 'Summary' && <SummaryPage />}
         {tab === 'Settings' && <SettingsPage />}

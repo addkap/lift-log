@@ -78,3 +78,19 @@ export interface Draft {
   entries: DraftEntry[];
   updatedAt: number;
 }
+
+// ---- OneDrive sync settings (this device only, never uploaded) ----
+
+/** The OneDrive folder that holds lift-log-data.json. */
+export interface FolderRef {
+  driveId: string;
+  itemId: string;
+  name: string;
+}
+
+export interface SyncMeta {
+  id: 'sync';
+  folder?: FolderRef;
+  syncedSig?: string; // fingerprint of the data as of the last successful sync (see merge.ts: signature)
+  lastSync?: number; // time of the last successful sync
+}

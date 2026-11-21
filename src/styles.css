@@ -189,3 +189,17 @@ h1::after { content: ''; position: absolute; left: 0; bottom: 0; width: 64px; he
 
 /* Offline notice under the header */
 .offline { margin: 0; padding: 10px 16px; background: #fff3c4; color: #3a2a00; font-weight: 700; text-align: center; border-bottom: 2px solid #b38600; }
+
+/* ---- OneDrive sync ---- */
+.syncbar {
+  display: block; width: 100%; min-height: 48px; padding: 8px 16px; font: inherit; font-size: 18px; font-weight: 700;
+  border: 0; border-bottom: 2px solid; cursor: pointer; text-align: center;
+}
+.syncbar.ok { background: #e3f4e7; color: #0a5c1f; border-color: #0a5c1f; }
+.syncbar.warn { background: #fff3c4; color: #3a2a00; border-color: #b38600; }
+.syncbar.bad { background: #fdeaea; color: #8a0000; border-color: #a00000; }
+.syncbar.busy { background: #e7eefc; color: var(--primary); border-color: var(--primary); }
+.folder-row { padding: 10px 0; border-top: 1px solid #b9c6e4; }
+.folder-row strong { display: block; font-size: 20px; word-break: break-word; }
+.filebtn { text-align: center; line-height: 32px; cursor: pointer; }
+.filebtn input { display: none; }

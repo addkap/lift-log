@@ -4,6 +4,8 @@ import { db } from '../db';
 import { setIncrement, setSetRange } from '../store';
 import { sanitizeNumber } from '../lib/draft';
 import { WORKOUT_LABELS, type WorkoutType } from '../types';
+import BackupSettings from '../components/BackupSettings';
+import OneDriveSettings from '../components/OneDriveSettings';
 
 /** A number box that saves when you leave it. Empty or 0 puts the old value back. */
 function SettingNumber(props: { label: string; value: number; decimal?: boolean; onSave: (n: number) => void }) {
@@ -87,10 +89,8 @@ export default function SettingsPage() {
         )}
       </section>
 
-      <section className="card">
-        <h2>Backup and OneDrive</h2>
-        <p className="muted">Export/Import and OneDrive sync arrive in later stages.</p>
-      </section>
+      <OneDriveSettings />
+      <BackupSettings />
     </>
   );
 }
