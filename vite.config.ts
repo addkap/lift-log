@@ -2,7 +2,12 @@ import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+// GitHub Pages serves the site from a sub-path like /lift-log/. The deploy workflow sets VITE_BASE for that.
+// Locally (and on hosts that give the site its own address) it stays "/".
+const base = process.env.VITE_BASE ?? '/';
+
 export default defineConfig({
+  base,
   plugins: [
     react(),
     // Makes the site installable and lets it work with no internet:
@@ -16,8 +21,8 @@ export default defineConfig({
         description: 'Simple gym workout log',
         display: 'standalone', // opens full-screen, no browser bars
         orientation: 'portrait',
-        start_url: '/',
-        scope: '/',
+        start_url: base,
+        scope: base,
         background_color: '#ffffff',
         theme_color: '#00338d',
         icons: [

@@ -19,7 +19,7 @@ function getApp(): Promise<IPublicClientApplication> {
       auth: {
         clientId: MS_CLIENT_ID.trim(),
         authority: 'https://login.microsoftonline.com/consumers', // personal Microsoft accounts only
-        redirectUri: window.location.origin + '/', // must match the redirect URI in the Entra app registration
+        redirectUri: window.location.origin + import.meta.env.BASE_URL, // must match the redirect URI in the Entra app registration
       },
       cache: { cacheLocation: 'localStorage' }, // stay signed in between visits
     });
