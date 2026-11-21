@@ -1,0 +1,107 @@
+/* High contrast, big text, big tap targets. Nothing here is smaller than 18px or 48px. */
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --muted: #3d3d3d;
+  --primary: #0b3d91;
+  --primary-text: #ffffff;
+  --border: #111111;
+  --card: #f2f4f8;
+  --ok: #0a5c1f;
+  --err: #a00000;
+  --tabbar-h: 68px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); }
+body {
+  font-family: -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-size: 18px;
+  line-height: 1.4;
+  -webkit-text-size-adjust: 100%;
+}
+
+.page {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 16px 16px calc(var(--tabbar-h) + 32px + env(safe-area-inset-bottom));
+}
+h1 { font-size: 28px; margin: 8px 0 12px; }
+h2 { font-size: 22px; margin: 0 0 4px; }
+p { margin: 4px 0; }
+.muted { color: var(--muted); }
+.suggest { font-weight: 700; color: var(--primary); }
+.label { display: block; font-weight: 700; margin: 16px 0 6px; }
+
+/* ---- buttons ---- */
+.btn {
+  display: block; width: 100%;
+  min-height: 52px; padding: 10px 16px;
+  font: inherit; font-weight: 700;
+  background: #fff; color: var(--text);
+  border: 2px solid var(--border); border-radius: 12px;
+  margin: 8px 0;
+  cursor: pointer;
+}
+.btn.primary { background: var(--primary); color: var(--primary-text); border-color: var(--primary); }
+.btn.big { min-height: 64px; font-size: 22px; margin-top: 20px; }
+.btn.danger { color: var(--err); border-color: var(--err); }
+.btn.small { padding: 8px 6px; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btns { display: flex; gap: 8px; }
+.btns .btn { flex: 1; }
+
+/* ---- workout picker ---- */
+.choices { display: grid; gap: 8px; }
+.choice {
+  min-height: 64px; font: inherit; font-size: 22px; font-weight: 700;
+  background: #fff; color: var(--text);
+  border: 3px solid var(--border); border-radius: 12px; cursor: pointer;
+}
+.choice.selected { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* ---- inputs ---- */
+.date, .text, .num.wide {
+  display: block; width: 100%; min-height: 56px; padding: 8px 12px;
+  font: inherit; font-size: 20px; color: var(--text); background: #fff;
+  border: 2px solid var(--border); border-radius: 12px;
+}
+.num {
+  width: 100%; min-height: 56px; padding: 8px 10px;
+  font: inherit; font-size: 24px; font-weight: 700; text-align: center;
+  color: var(--text); background: #fff;
+  border: 2px solid var(--border); border-radius: 12px;
+}
+.num:focus, .date:focus, .text:focus { outline: 4px solid #ffbf00; outline-offset: 0; }
+
+/* ---- exercise cards ---- */
+.card { background: var(--card); border: 2px solid var(--border); border-radius: 14px; padding: 14px; margin: 14px 0; }
+.rows { margin: 10px 0 4px; }
+.row { display: grid; grid-template-columns: 64px 1fr 1fr; gap: 8px; align-items: center; margin: 6px 0; }
+.row.head { font-weight: 700; text-align: center; margin-bottom: 0; }
+.setno { font-weight: 700; }
+
+.check { display: flex; gap: 12px; align-items: center; min-height: 52px; margin: 12px 0; font-weight: 700; }
+.check input { width: 32px; height: 32px; flex: none; }
+
+.banner { padding: 12px 14px; border-radius: 12px; font-weight: 700; margin: 12px 0; border: 2px solid; }
+.banner.ok { color: var(--ok); border-color: var(--ok); background: #e7f6ea; }
+.banner.err { color: var(--err); border-color: var(--err); background: #fdeaea; }
+
+/* ---- settings ---- */
+.setting { display: grid; grid-template-columns: 1fr 110px; gap: 10px; align-items: center; margin: 10px 0; }
+.setting .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+/* ---- bottom tab bar ---- */
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  background: #fff; border-top: 3px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.tab {
+  min-height: var(--tabbar-h); font: inherit; font-size: 18px; font-weight: 700;
+  background: #fff; color: var(--text); border: 0; border-right: 1px solid #bbb; cursor: pointer;
+}
+.tab:last-child { border-right: 0; }
+.tab.active { background: var(--primary); color: #fff; }
