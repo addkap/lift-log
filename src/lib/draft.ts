@@ -125,3 +125,36 @@ export function draftToWorkout(d: Draft, now = Date.now()): Workout | null {
   if (entries.length === 0) return null;
   return { id: newId(), date: d.date, type: d.type, entries, createdAt: now, updatedAt: now };
 }
+
+// ---- Editing an already-saved workout (History page) ----
+// We reuse the draft helpers above: a saved workout is turned into a draft, edited,
+// then turned back into a workout with the same id.
+
+export function workoutToDraft(w: Workout): Draft {
+  return {
+    id: 'current',
+    type: w.type,
+    date: w.date,
+    updatedAt: w.updatedAt,
+    entries: w.entries.map((e) => ({
+      key: newId(),
+      exerciseId: e.exerciseId,
+      name: e.name,
+      minSets: e.sets.length,
+      maxSets: e.sets.length,
+      rows: e.sets.map((s) => ({ weight: String(s.weight), reps: String(s.reps) })),
+    })),
+  };
+}
+
+/** Save edits onto the original workout (same id and createdAt). Null if no sets remain. */
+export function applyDraftToWorkout(original: Workout, d: Draft, now = Date.now()): Workout | null {
+  const edited = draftToWorkout(d, now);
+  if (!edited) return null;
+  return { ...original, date: d.date, entries: edited.entries, updatedAt: now };
+}
+
+/** Deleting leaves a tombstone (so the deletion can sync) instead of removing the record. */
+export function markDeleted(w: Workout, now = Date.now()): Workout {
+  return { ...w, deletedAt: now, updatedAt: now };
+}

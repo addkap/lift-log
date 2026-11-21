@@ -1,12 +1,15 @@
 /* High contrast, big text, big tap targets. Nothing here is smaller than 18px or 48px. */
 :root {
+  /* Buffalo Bills colours: royal blue #00338D, red #C60C30, navy, white */
   --bg: #ffffff;
-  --text: #111111;
-  --muted: #3d3d3d;
-  --primary: #0b3d91;
+  --text: #0a1020;
+  --muted: #38425a;
+  --primary: #00338d;   /* royal blue */
   --primary-text: #ffffff;
-  --border: #111111;
-  --card: #f2f4f8;
+  --accent: #c60c30;    /* Bills red */
+  --navy: #0c2340;
+  --border: #00338d;
+  --card: #eef2fb;
   --ok: #0a5c1f;
   --err: #a00000;
   --tabbar-h: 68px;
@@ -26,11 +29,11 @@ body {
   margin: 0 auto;
   padding: 16px 16px calc(var(--tabbar-h) + 32px + env(safe-area-inset-bottom));
 }
-h1 { font-size: 28px; margin: 8px 0 12px; }
-h2 { font-size: 22px; margin: 0 0 4px; }
+h1 { font-size: 30px; margin: 8px 0 12px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+h2 { font-size: 22px; margin: 0 0 4px; color: var(--navy); }
 p { margin: 4px 0; }
 .muted { color: var(--muted); }
-.suggest { font-weight: 700; color: var(--primary); }
+.suggest { font-weight: 700; color: var(--accent); }
 .label { display: block; font-weight: 700; margin: 16px 0 6px; }
 
 /* ---- buttons ---- */
@@ -44,8 +47,9 @@ p { margin: 4px 0; }
   cursor: pointer;
 }
 .btn.primary { background: var(--primary); color: var(--primary-text); border-color: var(--primary); }
-.btn.big { min-height: 64px; font-size: 22px; margin-top: 20px; }
+.btn.big { min-height: 64px; font-size: 22px; margin-top: 20px; background: var(--accent); border-color: var(--accent); color: #fff; }
 .btn.danger { color: var(--err); border-color: var(--err); }
+.btn.big:disabled { background: #7d8498; border-color: #7d8498; opacity: 1; }
 .btn.small { padding: 8px 6px; }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .btns { display: flex; gap: 8px; }
@@ -96,12 +100,46 @@ p { margin: 4px 0; }
 .tabbar {
   position: fixed; left: 0; right: 0; bottom: 0;
   display: grid; grid-template-columns: repeat(4, 1fr);
-  background: #fff; border-top: 3px solid var(--border);
+  background: var(--primary); border-top: 4px solid var(--accent);
   padding-bottom: env(safe-area-inset-bottom);
 }
 .tab {
   min-height: var(--tabbar-h); font: inherit; font-size: 18px; font-weight: 700;
-  background: #fff; color: var(--text); border: 0; border-right: 1px solid #bbb; cursor: pointer;
+  background: var(--primary); color: #fff; border: 0; border-right: 1px solid #4a6bb5; cursor: pointer;
 }
 .tab:last-child { border-right: 0; }
-.tab.active { background: var(--primary); color: #fff; }
+.tab.active { background: var(--accent); color: #fff; }
+
+/* ---- Bills header banner ---- */
+.banner-top {
+  background: var(--primary); color: #fff; border-bottom: 5px solid var(--accent);
+  padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
+  display: flex; justify-content: space-between; align-items: baseline;
+}
+.banner-top .brand { font-size: 26px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; }
+.banner-top .cheer { font-size: 18px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+.page { padding-top: 12px; }
+
+/* ---- History list ---- */
+.list-item {
+  display: block; width: 100%; text-align: left; min-height: 72px; margin: 8px 0; padding: 10px 14px;
+  font: inherit; color: var(--text); background: var(--card);
+  border: 2px solid var(--border); border-left: 10px solid var(--accent); border-radius: 12px; cursor: pointer;
+}
+.list-item strong { display: block; font-size: 20px; }
+
+/* ---- Summary ---- */
+.range { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 8px 0 12px; }
+.range button {
+  min-height: 52px; font: inherit; font-size: 18px; font-weight: 700; padding: 4px;
+  background: #fff; color: var(--text); border: 2px solid var(--border); border-radius: 10px; cursor: pointer;
+}
+.range button.selected { background: var(--primary); color: #fff; }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0; }
+.tile { background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 10px 12px; }
+.tile .big-number { display: block; font-size: 32px; font-weight: 900; color: var(--primary); line-height: 1.1; }
+.tile.wide { grid-column: 1 / -1; }
+.chart { width: 100%; height: 240px; margin: 8px 0; }
+.select { display: block; width: 100%; min-height: 56px; padding: 8px 12px; font: inherit; font-size: 20px; font-weight: 700;
+  color: var(--text); background: #fff; border: 2px solid var(--border); border-radius: 12px; }
+.type-line { display: flex; justify-content: space-between; padding: 4px 0; font-weight: 700; }

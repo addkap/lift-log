@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { ensureSeeded } from './store';
 import WorkoutPage from './pages/WorkoutPage';
 import SettingsPage from './pages/SettingsPage';
-import ComingSoon from './pages/ComingSoon';
+import HistoryPage from './pages/HistoryPage';
+import SummaryPage from './pages/SummaryPage';
 
 const TABS = ['Workout', 'History', 'Summary', 'Settings'] as const;
 type Tab = (typeof TABS)[number];
@@ -21,10 +22,14 @@ export default function App() {
   return (
     <>
       {/* All pages stay mounted-on-demand; the Workout page reloads its draft from storage itself. */}
+      <header className="banner-top">
+        <span className="brand">Lift Log</span>
+        <span className="cheer">Go Bills!</span>
+      </header>
       <main className="page">
         {tab === 'Workout' && <WorkoutPage />}
-        {tab === 'History' && <ComingSoon title="History" />}
-        {tab === 'Summary' && <ComingSoon title="Summary" />}
+        {tab === 'History' && <HistoryPage />}
+        {tab === 'Summary' && <SummaryPage />}
         {tab === 'Settings' && <SettingsPage />}
       </main>
 

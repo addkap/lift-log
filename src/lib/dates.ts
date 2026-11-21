@@ -33,3 +33,17 @@ export function formatLongDate(ymd: string): string {
 export function isValidDate(ymd: string): boolean {
   return /^\d{4}-\d{2}-\d{2}$/.test(ymd);
 }
+
+/** Add (or subtract) whole days. Works on YYYY-MM-DD strings in local time. */
+export function addDays(ymd: string, n: number): string {
+  const [y, m, d] = parts(ymd);
+  return todayLocal(new Date(y, m - 1, d + n));
+}
+
+/** The Monday of the week containing this date. Weeks run Monday-Sunday,
+ *  so a Saturday and Sunday workout land in the same week. */
+export function weekStart(ymd: string): string {
+  const [y, m, d] = parts(ymd);
+  const dow = new Date(y, m - 1, d).getDay(); // 0 = Sunday
+  return addDays(ymd, -((dow + 6) % 7));
+}

@@ -10,3 +10,17 @@ describe('dates', () => {
     expect(formatLongDate('2026-11-21')).toBe('Sat, Nov 21');
   });
 });
+
+import { addDays, weekStart } from './dates';
+
+describe('weeks (Monday to Sunday)', () => {
+  it('Saturday and Sunday are in the same week', () => {
+    expect(weekStart('2026-11-21')).toBe('2026-11-16'); // Saturday
+    expect(weekStart('2026-11-22')).toBe('2026-11-16'); // Sunday
+    expect(weekStart('2026-11-23')).toBe('2026-11-23'); // next Monday starts a new week
+  });
+  it('adds days across month and year ends', () => {
+    expect(addDays('2026-12-30', 3)).toBe('2027-01-02');
+    expect(addDays('2026-03-01', -1)).toBe('2026-02-28');
+  });
+});
