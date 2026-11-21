@@ -79,7 +79,8 @@ One Microsoft Graph permission: **`Files.ReadWrite`**. For personal Microsoft ac
 ### Step A: Register the app with Microsoft (free, about 10 minutes, once)
 You do this once, as the developer. Your dad does not need to.
 
-1. Go to <https://entra.microsoft.com> (or <https://portal.azure.com>) and sign in with your **personal** Microsoft account. If it offers to set up a free directory or account, accept; app registrations cost nothing.
+1. Go to <https://entra.microsoft.com> (or <https://portal.azure.com>) and sign in with your **personal** Microsoft account.
+   - A brand-new personal account often **cannot** sign in there ("user account does not exist in tenant 'Microsoft Services'"), because it has no directory yet. If so, first create a free Azure account with that same Microsoft account at <https://azure.microsoft.com/free> (it asks for a phone number and a card to verify you; the free account is not charged unless you upgrade it). That creates a "Default Directory", and then the sign-in above works. App registrations themselves are free.
 2. Open **Entra ID** (or "Microsoft Entra ID") → **App registrations** → **New registration**.
 3. Fill in:
    - **Name:** `Lift Log`
@@ -156,6 +157,7 @@ Suggestions are worked out from saved history each time, never stored, so editin
 
 ## Troubleshooting
 - **Microsoft says "redirect URI mismatch":** the address in the browser must be listed exactly under Authentication (step 3A.5), with `https`, the port, and the final `/`.
+- **Microsoft says the account "does not exist in tenant 'Microsoft Services'" when signing in to Lift Log:** the app registration does not allow personal accounts. In the registration, **Authentication → Supported account types** must include personal Microsoft accounts ("Accounts in any organizational directory and personal Microsoft accounts" or "Personal Microsoft accounts only"). If you use the "any directory and personal" option, the manifest setting `api.requestedAccessTokenVersion` must be `2`. The app's `/consumers` sign-in address stays as it is.
 - **"Tap to sync" every day:** normal for a phone that was not opened for more than about a day. Tap it and sign in.
 - **Blank page on GitHub Pages:** check the Actions tab for a red run; the site address must end in `/lift-log/` (it follows your repository name).
 - **The phone shows an old version:** close the app completely and open it again; the new version installs on the next open.
