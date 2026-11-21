@@ -129,8 +129,8 @@ export function startAutoSync(): void {
   liveQuery(async () => signature(await readLocalData())).subscribe({
     next: async (sig) => {
       const meta = await getMeta();
-      await refreshStatus();
-      if (meta.folder && sig !== meta.syncedSig) later();
+      if (meta.folder && sig !== meta.syncedSig) later(); // schedule first: never wait on sign-in setup
+      void refreshStatus();
     },
     error: () => { /* never let sync trouble affect logging */ },
   });

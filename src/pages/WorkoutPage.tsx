@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
 import { addCustomExercise, discardDraft, finishWorkout, loadDraft, saveDraft, startWorkout } from '../store';
-import { addRow, entryHasData, moveEntry, removeEntry, removeLastRow, sanitizeNumber, setCell } from '../lib/draft';
+import { addEntry, addRow, entryHasData, moveEntry, removeEntry, removeLastRow, sanitizeNumber, setCell } from '../lib/draft';
 import { formatLongDate, todayLocal } from '../lib/dates';
 import { hintFor } from '../lib/progression';
 import { WORKOUT_LABELS, type Draft, type Workout, type WorkoutType } from '../types';
@@ -56,7 +56,13 @@ export default function WorkoutPage({ onGoSettings }: { onGoSettings: () => void
       update={update}
       onFinished={() => { replace(null); setSaved(true); }}
       onCancel={async () => { await discardDraft(); replace(null); }}
-      onCustom={async (opts) => replace(await addCustomExercise(draftRef.current!, opts))}
+      onCustom={async (opts) => {
+        // addCustomExercise saves the exercise itself; the new card is then added through update(),
+        // which autosaves the draft and keeps anything typed in the meantime.
+        const withNew = await addCustomExercise(draftRef.current!, opts);
+        const added = withNew.entries[withNew.entries.length - 1];
+        update((d) => addEntry(d, added));
+      }}
     />
   );
 }

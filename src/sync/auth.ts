@@ -10,6 +10,14 @@ export const RETURN_TAB_KEY = 'lift-return-tab';
 export const isConfigured = () => MS_CLIENT_ID.trim().length > 0;
 
 let appPromise: Promise<IPublicClientApplication> | null = null;
+let redirectError: string | null = null;
+
+/** A sign-in problem from the last trip to Microsoft's page, shown once in Settings. */
+export function takeRedirectError(): string | null {
+  const e = redirectError;
+  redirectError = null;
+  return e;
+}
 
 function getApp(): Promise<IPublicClientApplication> {
   if (!isConfigured()) return Promise.reject(new Error('OneDrive sync is not set up in this copy of the app (no client ID).'));
@@ -24,7 +32,11 @@ function getApp(): Promise<IPublicClientApplication> {
       cache: { cacheLocation: 'localStorage' }, // stay signed in between visits
     });
     // If we just came back from the Microsoft sign-in page, this picks up the result.
-    const result = await app.handleRedirectPromise();
+    // (If the user cancelled or Microsoft returned an error, remember it and carry on: it must not break sign-in.)
+    const result = await app.handleRedirectPromise().catch((e: unknown) => {
+      redirectError = e instanceof Error ? e.message : 'Sign-in did not finish.';
+      return null;
+    });
     const account = result?.account ?? app.getAllAccounts()[0] ?? null;
     if (account) app.setActiveAccount(account);
     return app;

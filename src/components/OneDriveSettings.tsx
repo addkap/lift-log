@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { isConfigured, signIn, signOut } from '../sync/auth';
+import { getAccount, isConfigured, signIn, signOut, takeRedirectError } from '../sync/auth';
 import { refreshStatus, syncNow } from '../sync/engine';
 import { formatDateTime, syncLabel, useSyncStatus } from '../sync/useSyncStatus';
 import FolderPicker from './FolderPicker';
@@ -10,7 +10,15 @@ export default function OneDriveSettings() {
   const [picking, setPicking] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => { void refreshStatus(); }, []);
+  useEffect(() => {
+    void refreshStatus();
+    if (isConfigured()) {
+      void getAccount().catch(() => null).then(() => {
+        const problem = takeRedirectError();
+        if (problem) setError(`Sign-in did not finish: ${problem}`);
+      });
+    }
+  }, []);
 
   if (!isConfigured()) {
     return (

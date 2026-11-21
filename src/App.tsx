@@ -28,8 +28,7 @@ export default function App() {
   // After coming back from the Microsoft sign-in page, reopen the tab we left.
   const [tab, setTab] = useState<Tab>(() => {
     try {
-      const saved = localStorage.getItem(RETURN_TAB_KEY);
-      localStorage.removeItem(RETURN_TAB_KEY);
+      const saved = localStorage.getItem(RETURN_TAB_KEY); // removed in the effect below
       if (saved && (TABS as readonly string[]).includes(saved)) return saved as Tab;
     } catch { /* ignore */ }
     return 'Workout';
@@ -39,6 +38,7 @@ export default function App() {
 
   // Load the preloaded workouts the first time the app runs.
   useEffect(() => {
+    try { localStorage.removeItem(RETURN_TAB_KEY); } catch { /* ignore */ }
     (async () => {
       await ensureSeeded();
       // A phone with no workouts but a connected OneDrive folder pulls its data first (gives up after a few seconds).
